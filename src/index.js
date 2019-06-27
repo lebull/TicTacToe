@@ -49,10 +49,13 @@ class Game extends React.Component {
     }
 
     jumpTo(move){
-        let xIsNext = (move % 2 === 0);
+        const current = this.state.history[move];
+        const squares = current.squares.slice();
+
         this.setState({
-            xIsNext: xIsNext,
             currentMove: move,
+            xIsNext: calculateXIsNext(move),
+            winner: calculateWinner(squares)
         });
         
     }
@@ -72,11 +75,10 @@ class Game extends React.Component {
 
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         currentMove += 1;
-        let xIsNext = (currentMove % 2 === 0);
 
         this.setState({
             history: history.splice(0, currentMove).concat([{squares: squares}]) ,
-            xIsNext: xIsNext,
+            xIsNext: calculateXIsNext(currentMove),
             winner: calculateWinner(squares),
             currentMove: currentMove,
         });
@@ -109,6 +111,10 @@ class Game extends React.Component {
             </div>
         );
     }
+}
+
+function calculateXIsNext(move){
+    return (move % 2 === 0);
 }
 
 function calculateWinner(squares){
